@@ -1,12 +1,15 @@
 clear all;
-filename = 'videos/auto.avi';
+global classes;
+filename = 'videos/AmbassadorPeopleBird.avi';
 hbfr = vision.VideoFileReader('Filename', filename);
 
+
 % Store positions of found objects
-% obj = [x0, y0, width, height, class]
+% obj = [x0, y0, x, class]
 objs = [];
-colors = ['y','r','g','b','m','c'];
-loadClassifications();
+colors = ['r','g','b','m','c'];
+load('outlines.mat');
+classes = outlines;
 
 numSamples = 4;
 for i = 1:numSamples
@@ -62,7 +65,7 @@ while ~isDone(hbfr)
         end
         
         rect = [objs(i,1),objs(i,2),objs(i,3)-objs(i,1),objs(i,4)-objs(i,2)];
-        rectangle('Position',rect,'LineWidth',2, 'EdgeColor',colors(objs(i,end)+1));
+        rectangle('Position',rect,'LineWidth',2, 'EdgeColor',colors(objs(i,end)));
         c_diff(objs(i,2):objs(i,4),objs(i,1):objs(i,3)) = 0;
     end
     
@@ -85,14 +88,18 @@ while ~isDone(hbfr)
         
         if (length(r) < 500)
             continue;
+        elseif (width < 30 || height < 30)
+            continue;
         elseif (ratio > 4 || ratio < 0.25) 
             continue;
         elseif (x0 < 45 || y0 < 45 || xf > (n-45) || yf > (m-45))
             continue;
         end
         
-        radii = getOutline([r,c]);
-        class = classify(radii);
+        rectangle('Position',[x0,y0,width,height],'LineWidth',2, 'EdgeColor','y');
+        
+        [radii,~] = getOutline([r,c]);
+        class = classify(radii, ratio)
         if (class >= 0)
             objs = [objs;[x0,y0,xf,yf,class]];
         end

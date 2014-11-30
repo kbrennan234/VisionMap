@@ -13,3 +13,6 @@ function[] = loadClassifications()
     % Load bike outline
     load 'bike.mat';
     classes = [classes; radii];
+    
+    load 'outlines.mat';
+    classes = outlines;

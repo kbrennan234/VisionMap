@@ -1,11 +1,9 @@
-function[class] = classify(r)
+function[class] = classify(r, ratio)
 global classes;
-% 0 = unknown
 % 1 = car
 % 2 = van
-% 3 = truck
-% 4 = bike
-% 5 = person
+% 3 = bike
+% 4 = person
 
 testR = repmat(r, size(classes,1), 1);
 testL = testR;
@@ -52,21 +50,21 @@ end
 
 errI = errorL < errorR;
 errorR(errI) = errorL(errI)
-% minError = min(errorR);
+ratio
 
-% If close but still not accurate enough mark as unknown
-% class = find(errorR == minError);
-% if (class == 1 && minError > 12)
-%     class = -1;
-% elseif (class == 2 && minError > 50)
-%     class = -1;
-% end
+% Default to invalid class
+class = -1;
 
-if (errorR(1) < 12)
-    class = 1;
-elseif (errorR(1) < 210)
-    class = 2;
-else
-    class = -1;
+if (errorR(1) < 50 && ratio > 0.25 && ratio < 0.75)
+    class = 1; % Car
+end
+if (errorR(2) < 40 && ratio > 0.25 && ratio < 1)
+    class = 2; % Van
+end
+if (errorR(3) < 50 && ratio > 0.5 && ratio < 1.25)
+    class = 3; % Bike
+end
+if (errorR(4) < 50 && ratio > 1.5)
+    class = 4; % Person
 end
 end
