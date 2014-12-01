@@ -55,16 +55,16 @@ ratio
 % Default to invalid class
 class = -1;
 
-if (errorR(1) < 50 && ratio > 0.25 && ratio < 0.75)
+if (errorR(1) < 50 && ratio > 0.25 && ratio < 0.6)
     class = 1; % Car
+
+if (errorR(5) < 50 && ratio > 0.5 && ratio < 1.25)
+    class = 3; % Bike
 end
 if (errorR(2) < 40 && ratio > 0.25 && ratio < 1)
     class = 2; % Van
 end
-if (errorR(3) < 50 && ratio > 0.5 && ratio < 1.25)
-    class = 3; % Bike
-end
-if (errorR(4) < 50 && ratio > 1.5)
+if (errorR(6) < 50 && ratio > 1.5)
     class = 4; % Person
 end
 end

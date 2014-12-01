@@ -1,6 +1,6 @@
 clear all;
 global classes;
-filename = 'videos/AmbassadorPeopleBird.avi';
+filename = 'videos/auto.avi';
 hbfr = vision.VideoFileReader('Filename', filename);
 
 
