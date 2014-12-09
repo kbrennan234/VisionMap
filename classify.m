@@ -49,22 +49,23 @@ for i = 1:n/2
 end
 
 errI = errorL < errorR;
-errorR(errI) = errorL(errI)
-ratio
+errorR(errI) = errorL(errI);
+minError = min(errorR);
+minInd = find(errorR == minError);
 
 % Default to invalid class
 class = -1;
 
-if (errorR(1) < 50 && ratio > 0.25 && ratio < 0.6)
+if (minInd == 1 && minError < 50 && ratio > 0.25 && ratio < 0.6)
     class = 1; % Car
-
-if (errorR(5) < 50 && ratio > 0.5 && ratio < 1.25)
+end
+if (minInd == 2 && minError < 50 && ratio > 0.5 && ratio < 1.25)
     class = 3; % Bike
 end
-if (errorR(2) < 40 && ratio > 0.25 && ratio < 1)
+if (minInd == 3 && minError < 40 && ratio > 0.25 && ratio < 1)
     class = 2; % Van
 end
-if (errorR(6) < 50 && ratio > 1.5)
+if (minInd == 4 && minError < 50 && ratio > 1.5)
     class = 4; % Person
 end
 end

@@ -1,8 +1,10 @@
 clear all;
+close all;
 global classes;
-filename = 'videos/auto.avi';
-hbfr = vision.VideoFileReader('Filename', filename);
 
+% Change filename to run another file
+filename = 'videos/ambassador_morning.avi';
+hbfr = vision.VideoFileReader('Filename', filename);
 
 % Store positions of found objects
 % obj = [x0, y0, x, class]
@@ -11,6 +13,7 @@ colors = ['r','g','b','m','c'];
 load('outlines.mat');
 classes = outlines;
 
+% Create background image
 numSamples = 4;
 for i = 1:numSamples
     frame = double(rgb2gray(step(hbfr)));
@@ -24,7 +27,7 @@ bkgd = bkgd / numSamples;
 [m,n] = size(frame);
 frameLast = frame;
 
-gss = fspecial('gaussian',[20,20]);
+% Smoothing filter
 blur = double(ones(7)/49);
 
 while ~isDone(hbfr)
@@ -99,11 +102,12 @@ while ~isDone(hbfr)
         rectangle('Position',[x0,y0,width,height],'LineWidth',2, 'EdgeColor','y');
         
         [radii,~] = getOutline([r,c]);
-        class = classify(radii, ratio)
+        class = classify(radii, ratio);
         if (class >= 0)
             objs = [objs;[x0,y0,xf,yf,class]];
         end
     end
+    
     pause(0.001);
 end
 release(hbfr); % release the handle hbfr
